@@ -13,7 +13,9 @@ import {
   BriefcaseIcon,
   AcademicCapIcon,
   TrophyIcon,
-  CalendarIcon
+  CalendarIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 
 // 个人基本信息
@@ -24,7 +26,7 @@ const personalInfo = {
   phone: '+86 138 0000 0000',
   email: '1944366169@qq.com',
   location: '北京市朝阳区',
-  avatar: '/avatar.jpg' // 可以放置头像图片
+  avatar: '/avatar.jpg'
 }
 
 // 技能数据
@@ -113,8 +115,16 @@ const blogPosts = [
   }
 ]
 
+const tabs = [
+  { key: 'profile', label: '个人信息' },
+  { key: 'experience', label: '工作经历' },
+  { key: 'projects', label: '项目经验' },
+  { key: 'blog', label: '技术博客' }
+]
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div className="min-h-screen">
@@ -125,14 +135,11 @@ export default function Home() {
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-900">{personalInfo.name}的简历</h1>
             </div>
+            
+            {/* 桌面端导航 */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                {[
-                  { key: 'profile', label: '个人信息' },
-                  { key: 'experience', label: '工作经历' },
-                  { key: 'projects', label: '项目经验' },
-                  { key: 'blog', label: '技术博客' }
-                ].map((tab) => (
+                {tabs.map((tab) => (
                   <button
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
@@ -147,7 +154,45 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
+            {/* 移动端菜单按钮 */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-gray-700 hover:text-primary-500"
+              >
+                {mobileMenuOpen ? (
+                  <XMarkIcon className="w-6 h-6" />
+                ) : (
+                  <Bars3Icon className="w-6 h-6" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* 移动端导航菜单 */}
+          {mobileMenuOpen && (
+            <div className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-white rounded-lg shadow-lg mt-2">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => {
+                      setActiveTab(tab.key)
+                      setMobileMenuOpen(false)
+                    }}
+                    className={`block w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      activeTab === tab.key
+                        ? 'bg-primary-500 text-white'
+                        : 'text-gray-700 hover:text-primary-500'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
